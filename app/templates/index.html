@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+    <div class="row">
+    <div class="jumbotron text-center" style="margin-bottom:0px; padding: 25px">
+        <h1>Клиентская аналитика </h1> 
+        <p>Оптимизация списка клиентов на коммуникацию</p> 
+        <form class="form-inline" style="padding: 5px">
+          <div class="input-group">
+            <input type="text" class="form-control" size="50" id='pathName' placeholder="Путь к списку клиентов" readonly>
+            <div class="input-group-btn">
+              <button type="button" id='chooseDirButton' class="btn btn-danger">...</button>
+            </div>
+            <input id="fileInput" type="file" name="name" style="display: none;" accept=".csv" />
+          </div>
+        </form>
+        <form class="form-inline" style="padding: 5px">
+            <div class="input-group">
+              <input type="text" class="form-control" size="50" id='pathNameTrain' placeholder="Путь к тренировочной выборке*" readonly>
+              <div class="input-group-btn">
+                <button type="button" id='chooseDirButtonTrain' class="btn btn-danger">...</button>
+              </div>
+              <input id="fileInputTrain" type="file" name="name" style="display: none;" accept=".csv" />
+            </div>
+          </form>
+          <p style="font-size: 12px">(*) оставьте пустым, если хотите использователь предыдущую модель.</p>
+    </div>
+    </div>
+    <br>
+    <div class="row">
+    <p>Предварительный просмотр таблицы клиентов: </p>
+    <div class="panel panel-default text-center" id="tablePreview" style="display: block; position: relative;  overflow: auto;">
+        <h4>Данные не загружены</h4>
+    </div>
+    <p>Ввод параметров: </p>
+        <form class="form-horizontal text-center col-sm-4 col-sm-offset-4" id="paramForm">
+            <div class="form-group text-center">
+                <div class="col-sm-6 text-center">
+                    <input type="checkbox" onclick="javascript:without('checkBoxEmail', 'priceEmail')" checked class="form-check-input" id="checkBoxEmail">
+                    <label class="form-check-label offset-sm-2" style="position: relative; right:-30px" for="checkBoxEmail" >Email</label>
+                </div>
+                <div class="col-sm-6 text-center">
+                    <input type="checkbox" checked class="form-check-input" onclick="javascript:without('checkBoxSMS', 'priceSMS')" style="position: relative; right:30px"  id="checkBoxSMS">
+                    <label class="form-check-label" style="position: relative; right:0px" for="checkBoxSMS">SMS</label>
+                </div>
+            </div>
+            <div class="form-group text-center" has-error>
+                <div class="col-sm-7 text-center">
+                <label class="control-label" for="priceSMS">Цена одного SMS (руб.)</label>
+                </div>
+                <div class="col-sm-4 text-center">
+                <input type="number" required step="0.01" class="form-control col-sm-2" id="priceSMS" value="0.00" min="0.00">
+                </div>
+            </div>
+            <div class="form-group text-center" has-error>
+                <div class="col-sm-7 text-center">
+                <label class="control-label" for="priceEmail">Цена одного Email (руб.)</label>
+                </div>
+                <div class="col-sm-4 text-center">
+                <input type="number" required step="0.01" class="form-control" id="priceEmail" value="0.00" min="0.00">
+                </div>
+            </div>
+            <div class="form-group text-center" has-error>
+                    <div class="col-sm-7 text-center">
+                        <label class="control-label" for="sum">Бюджет</label>
+                    </div>
+                    <div class="col-sm-4 text-center">
+                        <input type="number" step="1000" required class="form-control" id="sum" title="При нулевом значении, бюджет считается неограниченным"  data-toggle="tooltip" value="0" min="0">
+                    </div>
+            </div>
+            <p><button type="submit" disabled class="btn btn-default btn-sm btn-danger" style="width:100%" id ="submit">Получить результаты</button></p>
+        </form>
+    </div>
+    <span id = "masterButton">
+    <div class="row text-center">
+    <i class="fa fa-spinner fa-spin" id="spinner" style="position:relative;;visibility: hidden; font-size:24px; color: #D9534F"></i>
+    <span id='results'></span>
+    <span id='graph-container'>
+    <canvas id="line-chart" width="2" height="1"></canvas>
+    </span>
+    </div>
+    <span style="text-align: left" id = 'point'></span>
+    <div class="row text-center" id="downloadResults">
+    </div>
+    </span>
+{% endblock %}
